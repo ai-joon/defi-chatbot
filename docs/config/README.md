@@ -149,7 +149,7 @@ The notation follows the FreeMarker specification.
 }
 ```
 
-You can assign variables to the Config file at runtime by prefixing it with the parameter `template.`.
+You can assign variables to the Config file at runtime by prefixing it with the parameter `args.`.
 
 ```sh
 gcloud dataflow flex-template run {job_name} \
