@@ -290,31 +290,19 @@ public class JdbcUtil {
     private static void appendPostgreSQLTypedPlaceholder(PreparedStatementTemplate.Builder sb, int index , Schema.Field field) {
         sb.appendPlaceholder(index);
 
-         if (field.schema().getType() == Schema.Type.UNION) {
-             if (
-                 field.schema().equals(AvroSchemaUtil.NULLABLE_LOGICAL_DATE_TYPE) ||
-                 field.schema().equals(AvroSchemaUtil.REQUIRED_LOGICAL_DATE_TYPE)
-             ) {
-                 sb.appendString("::date");
-             } else if (
-                 field.schema().equals(AvroSchemaUtil.NULLABLE_LOGICAL_TIMESTAMP_MICRO_TYPE) ||
-                 field.schema().equals(AvroSchemaUtil.REQUIRED_LOGICAL_TIMESTAMP_MICRO_TYPE) ||
-                 field.schema().equals(AvroSchemaUtil.NULLABLE_LOGICAL_TIMESTAMP_MILLI_TYPE) ||
-                 field.schema().equals(AvroSchemaUtil.REQUIRED_LOGICAL_TIMESTAMP_MILLI_TYPE)
-             ) {
-                 sb.appendString("::timestamp");
-             }
-         } else {
-             LogicalType logicalType = field.schema().getLogicalType();
-             if (logicalType != null) {
-                 if (logicalType.equals(LogicalTypes.date())) {
-                     sb.appendString("::date");
-                 } else if (logicalType.equals(LogicalTypes.timestampMicros()) ||
-                         logicalType.equals(LogicalTypes.timestampMillis())) {
-                     sb.appendString("::timestamp");
-                 }
-             }
-         }
+        Schema normalizedSchema;
+        if (field.schema().getType() == Schema.Type.UNION) {
+            normalizedSchema = AvroSchemaUtil.unnestUnion(field.schema());
+        } else {
+            normalizedSchema = field.schema();
+        }
+
+        LogicalType logicalType = normalizedSchema.getLogicalType();
+        if (LogicalTypes.date().equals(logicalType)) {
+            sb.appendString("::date");
+        } else if (LogicalTypes.timestampMicros().equals(logicalType) || LogicalTypes.timestampMillis().equals(logicalType)) {
+            sb.appendString("::timestamp");
+        }
     }
 
     private static PreparedStatementTemplate createPostgreSQLStatement(final String table, final Schema schema,
