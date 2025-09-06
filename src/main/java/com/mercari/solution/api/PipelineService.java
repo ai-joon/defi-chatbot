@@ -1,11 +1,11 @@
 package com.mercari.solution.api;
 
 import com.google.dataflow.v1beta3.*;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.mercari.solution.MPipeline;
 import com.mercari.solution.config.Config;
 import com.mercari.solution.config.Options;
+import com.mercari.solution.config.Config.Format;
 import com.mercari.solution.config.options.DataflowOptions;
 import com.mercari.solution.config.options.DirectOptions;
 import com.mercari.solution.module.IllegalModuleException;
@@ -50,17 +50,23 @@ public class PipelineService {
                 throw new IllegalArgumentException("request parameter config is not found");
             }
             final String configText = jsonObject.get("config").getAsString();
+            final String argsText;
+            if (jsonObject.has("args")) {
+                argsText = jsonObject.get("args").getAsString();
+            } else {
+                argsText = null;
+            }
 
             switch (type.toLowerCase()) {
                 case "run", "dryrun" -> {
                     final boolean dryRun = type.startsWith("dry");
-                    run(configText, dryRun, response);
+                    run(configText, argsText, dryRun, response);
                 }
                 case "launch" -> {
-                    launch(configText, response, false);
+                    launch(configText, argsText, response, false);
                 }
                 case "createtemplate" -> {
-                    launch(configText, response, true);
+                    launch(configText, argsText, response, true);
                     //createTemplate(configText, response);
                 }
                 default -> throw new IllegalArgumentException("Not supported type: " + type);
@@ -85,6 +91,7 @@ public class PipelineService {
 
     private static void launch(
             final String configText,
+            final String argsText,
             final HttpServletResponse response,
             final boolean validateOnly) throws IOException {
 
@@ -93,7 +100,7 @@ public class PipelineService {
 
         final long startMillis = Instant.now().toEpochMilli();
         try {
-            final Config config = Config.load(configText);
+            final Config config = Config.load(configText, null, Format.unknown, parseArgs(argsText));
             if(config.getOptions() == null) {
                 throw new IllegalArgumentException("config.options must not be empty");
             }
@@ -165,6 +172,7 @@ public class PipelineService {
 
     private static void run(
             final String configText,
+            final String argsText,
             final Boolean dryRun,
             final HttpServletResponse response) throws IOException {
 
@@ -177,7 +185,7 @@ public class PipelineService {
             //response.getWriter().flush();
             //response.flushBuffer();
 
-            final Config config = Config.load(configText);
+            final Config config = Config.load(configText, null, Format.unknown, parseArgs(argsText));
 
             final MPipeline.MPipelineOptions pipelineOptions = createPipelineOptions(new String[0]);
             Options.setOptions(pipelineOptions, config.getOptions());
@@ -287,4 +295,20 @@ public class PipelineService {
 
     }
 
+    private static Map<String, String> parseArgs(String argsText) {
+        if(argsText == null || argsText.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        try {
+            final Map<String, String> parsed = new HashMap<>();
+            final JsonObject jsonObject = new Gson().fromJson(argsText, JsonObject.class);
+            for(final Map.Entry<String, ?> entry : jsonObject.entrySet()) {
+                parsed.put(entry.getKey(), entry.getValue().toString());
+            }
+            return parsed;
+        } catch (final Throwable t) {
+            throw new IllegalArgumentException("Failed to parse pipeline args: " + argsText, t);
+        }
+    }
 }

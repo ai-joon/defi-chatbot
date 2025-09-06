@@ -21,6 +21,7 @@ $("#buttons").on("click", "button", function(e){
 
   const data = {
     "config": $("#configTextarea").val(),
+    "args": $("#argsTextarea").val(),
     "type": buttonId
   }
 
