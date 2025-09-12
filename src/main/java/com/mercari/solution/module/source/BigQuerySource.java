@@ -201,13 +201,13 @@ public class BigQuerySource extends Source {
                         .of(elements, outputSchema);
             }
             case view -> {
-                final String query;
+                final String rawQuery;
                 if(parameters.query.startsWith("gs://")) {
-                    final String rawQuery = StorageUtil.readString(parameters.query);
-                    query = TemplateUtil.executeStrictTemplate(rawQuery, getTemplateArgs());
+                    rawQuery = StorageUtil.readString(parameters.query);
                 } else {
-                    query = parameters.query;
+                    rawQuery = parameters.query;
                 }
+                final String query = TemplateUtil.executeStrictTemplate(rawQuery, getTemplateArgs());
                 parameters.query = query;
                 final ViewSource source = new ViewSource(getJobName(), getName(), parameters, outputTag, failureTag);
                 final PCollectionTuple outputs = begin.apply("View", source);
@@ -248,21 +248,22 @@ public class BigQuerySource extends Source {
         }
 
         if(parameters.query != null) {
-            final String query;
+            final String rawQuery;
             if(parameters.query.startsWith("gs://")) {
                 LOG.info("query parameter is GCS path: {}", parameters.query);
-                final String rawQuery = StorageUtil.readString(parameters.query);
-                query = TemplateUtil.executeStrictTemplate(rawQuery, templateArgs);
+                rawQuery = StorageUtil.readString(parameters.query);
             } else if(ParameterManagerUtil.isParameterVersionResource(parameters.query)) {
                 LOG.info("query parameter is Parameter Manager resource: {}", parameters.query);
                 final ParameterManagerUtil.Version version = ParameterManagerUtil.getParameterVersion(parameters.query);
                 if(version.payload == null) {
                     throw new IllegalModuleException("query resource does not exists for: " + parameters.query);
                 }
-                query = new String(version.payload, StandardCharsets.UTF_8);
+                rawQuery = new String(version.payload, StandardCharsets.UTF_8);
             } else {
-                query = parameters.query;
+                rawQuery = parameters.query;
             }
+
+            final String query = TemplateUtil.executeStrictTemplate(rawQuery, templateArgs);
 
             read = read
                     .fromQuery(query)
