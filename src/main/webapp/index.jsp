@@ -23,19 +23,27 @@
       <button id="launchButton" type="button" name="launch" class="btn btn-warning" style="width: 150px; display:none;">Launch<span id="launchButtonTimer" style="display:none; margin-left: 10px;"></span></button>
     </div>
   </header>
-  <main style="width:100%; padding: 0px 20px 10px; flex: 1; display: flex; flex-direction: row; gap: 20px;">
-    <div id="input" style="width: 50%; height: 100%;">
-      <div class="form-floating" style="height: 100%;">
-        <textarea id="configTextarea" class="form-control" placeholder="write config here" style="height: 100%; resize: none;"></textarea>
-        <label for="configTextarea">Pipeline Config</label>
+  <main style="padding: 0px 20px 10px; flex: 1; display: flex; flex-direction: row; gap: 20px;">
+    <div id="left-pane" style="flex: 1; display: flex;">
+      <div id="input" style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
+        <div class="form-floating" style="flex: 4; display: flex; flex-direction: column;">
+          <textarea id="configTextarea" class="form-control" placeholder="write config here" style="flex: 1; resize: none;"></textarea>
+          <label for="configTextarea">Pipeline Config</label>
+        </div>
+        <div class="form-floating" style="flex: 1; display: flex; flex-direction: column;">
+          <textarea id="argsTextarea" class="form-control" placeholder="{&quot;key1&quot;: &quot;foo&quot;\n&quot;key2&quot;: &quot;bar&quot;}" style="flex: 1; resize: none;"></textarea>
+          <label for="argsTextarea">Pipeline Args</label>
+        </div>
       </div>
     </div>
-    <div id="output" style="width: 50%; height: 100%;">
-      <div id="outputBox" class="form-floating" style="height: 100%;">
-        <textarea id="outputArea" class="form-control" placeholder="write config here" style="height: 100%; resize: none;" readonly></textarea>
-        <label for="outputArea">Pipeline Result</label>
+    <div id="right-pane" style="flex: 1; display: flex;">
+      <div id="output" style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
+        <div id="outputBox" class="form-floating" style="flex: 1; display: flex; flex-direction: column;">
+          <textarea id="outputArea" class="form-control" placeholder="write config here" style="flex: 1; resize: none;" readonly></textarea>
+          <label for="outputArea">Pipeline Result</label>
+        </div>
+        <div id="loadingImg" style="display:none;margin: 30px;" />
       </div>
-      <div id="loadingImg" style="display:none;margin: 30px;" />
     </div>
   </main>
   <footer class="bg-light text-center py-2" style="flex-shrink: 0;">
