@@ -1,10 +1,10 @@
-# Mercari Pipeline
+# Dataflow Pipeline
 
-The Mercari Pipeline enables you to run various pipelines without writing programs by simply defining a configuration file.
+The Dataflow Pipeline enables you to run various pipelines without writing programs by simply defining a configuration file.
 
-Currently Mercari Pipeline's primary target is Cloud Dataflow, but we are in the process of preparing to run on Apache Spark and Apache Flink clusters as well.
+Currently Dataflow Pipeline's primary target is Cloud Dataflow, but we are in the process of preparing to run on Apache Spark and Apache Flink clusters as well.
 
-(Mercari Dataflow Template has been renamed Mercari Pipeline)
+(Dataflow Dataflow Template has been renamed Dataflow Pipeline)
 
 See the [Document](docs/README.md) for usage
 
@@ -39,7 +39,7 @@ sinks:
       table: mytable
 ```
 
-Assuming you have deployed the Mercari Pipeline to gs://example/template, run the following command.
+Assuming you have deployed the Dataflow Pipeline to gs://example/template, run the following command.
 
 ```sh
 gcloud dataflow flex-template run bigquery-to-spanner \
@@ -51,13 +51,13 @@ gcloud dataflow flex-template run bigquery-to-spanner \
 
 The Dataflow job will be started, and you can check the execution status of the job in the console screen.
 
-<img src="https://raw.githubusercontent.com/mercari/DataflowTemplate/master/docs/images/bigquery-to-spanner.png">
+<img src="https://raw.githubusercontent.com/Dataflow/DataflowTemplate/master/docs/images/bigquery-to-spanner.png">
 
 
 ## Deploy Template
 
-Mercari Pipeline is used as FlexTemplate.
-Therefore, the Mercari Pipeline should be deployed according to the FlexTemplate creation steps.
+Dataflow Pipeline is used as FlexTemplate.
+Therefore, the Dataflow Pipeline should be deployed according to the FlexTemplate creation steps.
 
 ### Requirements
 
@@ -226,19 +226,3 @@ docker run \
   --rm {region}-docker.pkg.dev/{deploy_project}/{template_repo_name}/server
 ```
 
-## Committers
-
- * Yoichi Nagai ([@orfeon](https://github.com/orfeon))
-
-## Contribution
-
-Please read the CLA carefully before submitting your contribution to Mercari.
-Under any circumstances, by submitting your contribution, you are deemed to accept and agree to be bound by the terms and conditions of the CLA.
-
-https://www.mercari.com/cla/
-
-## License
-
-Copyright 2025 Mercari, Inc.
-
-Licensed under the MIT License.
