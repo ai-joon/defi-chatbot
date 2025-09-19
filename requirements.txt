@@ -54,6 +54,8 @@ frozenlist==1.4.1
     # via
     #   aiohttp
     #   aiosignal
+greenlet==3.2.4
+    # via sqlalchemy
 h11==0.14.0
     # via
     #   httpcore
@@ -82,7 +84,7 @@ langchain==0.2.3
     #   langchain-community
 langchain-community==0.2.4
     # via -r requirements.in
-langchain-core==0.2.5
+langchain-core==0.2.43
     # via
     #   -r requirements.in
     #   langchain
@@ -93,7 +95,7 @@ langchain-openai==0.1.8
     # via -r requirements.in
 langchain-text-splitters==0.2.1
     # via langchain
-langsmith==0.1.101
+langsmith==0.1.147
     # via
     #   langchain
     #   langchain-community
@@ -155,7 +157,10 @@ requests==2.32.3
     #   langchain
     #   langchain-community
     #   langsmith
+    #   requests-toolbelt
     #   tiktoken
+requests-toolbelt==1.0.0
+    # via langsmith
 rich==13.7.1
     # via -r requirements.in
 sniffio==1.3.1
@@ -190,6 +195,7 @@ typing-extensions==4.12.2
     # via
     #   anyio
     #   fastapi
+    #   langchain-core
     #   openai
     #   pydantic
     #   pydantic-core
