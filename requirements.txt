@@ -4,13 +4,13 @@
 #
 #    pip-compile
 #
-aiohappyeyeballs==2.4.0
+aiohappyeyeballs==2.6.1
     # via aiohttp
-aiohttp==3.10.5
+aiohttp==3.12.14
     # via
     #   langchain
     #   langchain-community
-aiosignal==1.3.1
+aiosignal==1.4.0
     # via aiohttp
 annotated-types==0.7.0
     # via pydantic
@@ -54,6 +54,8 @@ frozenlist==1.4.1
     # via
     #   aiohttp
     #   aiosignal
+greenlet==3.2.4
+    # via sqlalchemy
 h11==0.14.0
     # via
     #   httpcore
@@ -127,6 +129,10 @@ packaging==23.2
     #   pytest
 pluggy==1.5.0
     # via pytest
+propcache==0.3.2
+    # via
+    #   aiohttp
+    #   yarl
 pydantic==2.8.2
     # via
     #   fastapi
@@ -188,6 +194,7 @@ tqdm==4.66.5
     # via openai
 typing-extensions==4.12.2
     # via
+    #   aiosignal
     #   anyio
     #   fastapi
     #   openai
@@ -206,5 +213,5 @@ uvicorn==0.30.6
     # via
     #   -r requirements.in
     #   sse-starlette
-yarl==1.9.4
+yarl==1.20.1
     # via aiohttp
