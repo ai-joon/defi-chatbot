@@ -1,0 +1,7 @@
+_type: prompt
+input_variables:
+    ["text"]
+template: 
+    "Your job is to take the following news article(s), and write a concise summary without any bias.\n\n
+    {text}\n\n
+    SUMMARY:"

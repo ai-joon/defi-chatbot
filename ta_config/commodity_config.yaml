@@ -1,0 +1,16 @@
+parameters:
+  symbol:
+    type: str
+    description:
+      "All uppercase ticker. Example: GOLD"
+    required: true
+  exchange:
+    type: Literal['cme', 'lme', 'nymex']
+    required: false
+    default: null
+    description: "The exchange you want to calculate the indicator from."
+  interval:
+    name: Interval
+    type: Literal['5m', '15m', '1h', '4h', '1d', '1w']
+    required: true
+    description: "The interval or time frame over which the indicator is calculated. It defines the granularity of the data points being analyzed."

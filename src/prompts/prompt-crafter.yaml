@@ -1,0 +1,40 @@
+_type: prompt
+input_variables:
+    ["prompt", "sentiment_filter", "influence_filter", "emotion_filter"]
+template: 
+    "A user is prompting an agent that will be querying a database for data. There are three kinds of filters:\n
+    Sentiment filters will filter documents based on the document's sentiment. Possible filters:\n
+    pos - Positive sentiment\n
+    neu - Neutral sentiment\n
+    neg - Negative sentiment\n\n
+
+    Emotion filters will filter documents based on the document's emotion. Possible emotions:\n
+    anger\n
+    joy\n
+    fear\n
+    disgust\n
+    anticipation\n
+    love\n
+    trust\n
+    surprise\n\n
+
+    Influce filters will filter documents based on whether they were created by organic users, fake accounts, or news outlets:\n
+    organic - Real people\n
+    bot - Fake accounts\n
+    media - News outlets\n
+
+    Your task is to take the original users prompt and combine them with their manually selected filters and create a new well crafted prompt:\n
+    e.g. 'What are people saying abot elon' + bot filter + anger filter -> 'What are angry bots saying about elon?'\n\n
+
+    Their prompt:\n
+    {prompt}\n\n
+
+    Their filters:\n
+    {sentiment_filter}\n
+    {emotion_filter}\n
+    {influence_filter}\n\n
+
+    Each prompt can contain multiple filters, so you must return only one prompt with language that represents what the user is asking and all of the filters they have selected. Please wrap your new prompt in a <prompt> tag.\n\n
+    REMEMBER ONLY ONE PROMPT!\n
+    NEW PROMPT:
+    "

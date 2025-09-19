@@ -1,0 +1,15 @@
+parameters:
+  symbol:
+    type: str
+    description: "Symbol names are always uppercase formatted as BASE/QUOTE. For example: EUR/USD"
+    required: true
+  exchange:
+    type: Literal['oanda', 'fxcm', 'dukascopy']
+    required: false
+    description: "The exchange you want to calculate the indicator from."
+    default: null
+  interval:
+    name: Interval
+    type: Literal['5m', '15m', '1h', '4h', '1d', '1w']
+    required: true
+    description: "The interval or time frame over which the indicator is calculated. It defines the granularity of the data points being analyzed."

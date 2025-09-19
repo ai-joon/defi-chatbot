@@ -7,20 +7,17 @@
 services:
 
   # Backbone Data Service
-  s-backbone-cis:
-    container_name: "s-backbone-cis"
-    build:
-      context: .
-      dockerfile: ./Dockerfile.dev
+  backbone-cis:
+    image: wiseoneai/backbone-cis:${APP_VERSION}
+    restart: always
+    container_name: "backbone-cis"
     working_dir: /app
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app/src
     volumes:
-      - ./src:/app/src
       - ./.env:/app/.env
       - ./app.yml:/app/app.yml
-      - ./ta_config:/app/ta_config
       - ./agent-config.yml:/app/agent-config.yml
       - ./logging-config.yml:/app/logging-config.yml
     #command: "npm start"
