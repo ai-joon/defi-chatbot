@@ -1,0 +1,6 @@
+_type: prompt
+input_variables: ["text"]
+template:
+    "The text consists of social media posts. Create a summary of what they are talking about, and why:\n\n
+    {text}\n\n
+    SUMMARY:"

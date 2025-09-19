@@ -1,0 +1,147 @@
+
+// Global variable for external Groovy Script(s)
+def groovyDeploy
+
+pipeline {
+
+    // Any agent will do for now!
+    agent any
+
+    parameters {
+
+        /* 
+        * Select dropdown for which environment should be updated [staging, production].
+        * 
+        * NOTE: Do NOT delete the empty option unless Jenkins fixed the issue described below
+        */
+        choice(name: "ENVIRONMENT_NAME", choices: ["", "staging", "us-east"], description: "Which environment should be updated? The staging, or production servers?")
+        
+        /*
+        * The user can choose to update ALL nodes or just one
+        */
+        string(name: "NODE_SEQUENCE_ID", defaultValue: "all", description: "If updating just 1 server, please provide the Sequence ID of that node, otherwise 'all'.")
+
+        /*
+        * Which branch should be used to pull the updates. Note if this 
+        * isn't used, Jenkins will execute the pipeline for all branches 
+        * that contain a Jenkinsfile
+        */
+        choice(name: "DEPLOY_BRANCH", choices: ["main", "staging"], description: "Which branch should I pull updates from?")
+        
+        /*
+        * The user needs to manually enter which version should be deployed
+        */
+        string(name: "APP_VERSION", defaultValue: "latest", description: "Please provide the version for which to deploy this under.")
+
+        /*
+        * 
+        */
+        booleanParam(name: "IS_NEW_VERSION", defaultValue: false, description: "Check this if you are deploying a new version with new source code changes. Otherwise the version above will be deployed.")
+    }
+
+    stages {
+
+        /*
+        * Prepare the pipeline
+        */
+        stage("init") {
+            steps {
+                script {
+                    groovyDeploy = load "jenkins/deploy.groovy"
+
+                    // Download the configuration secrets
+                    groovyDeploy.downloadSecrets()
+
+                    /* IMPORTANT!
+                    *
+                    * Make sure not everything has a default value! 
+                    * Jenkins seems to think that it should run a pipeline 
+                    * even if you do a small change like editing the main 
+                    * configuration!
+                    *
+                    * We don't want the pipeline to run by accident!
+                    */
+                    if(params.ENVIRONMENT_NAME == "") {
+                        currentBuild.result = 'ABORTED'
+                        error("ERROR: No ENVIRONMENT_NAME was selected!")
+                    } 
+
+                    if(params.NODE_SEQUENCE_ID == "") {
+                        currentBuild.result = 'ABORTED'
+                        error("ERROR: No NODE_SEQUENCE_ID was selected!")
+                    } 
+
+                    env.APP_VERSION = params.APP_VERSION
+
+                    if(env.APP_VERSION == "" || env.APP_VERSION == null) {
+                        currentBuild.result = 'ABORTED'
+                        error("ERROR: No APP_VERSION was supplied!")
+                    }
+                }
+            }
+            
+        }
+        
+        /*
+        * Build docker image(s) and tag them with the version
+        */
+        stage("build") {
+
+            when {
+                expression {
+                    BRANCH_NAME == params.DEPLOY_BRANCH && params.IS_NEW_VERSION
+                }
+            }
+
+            steps {
+
+                script {
+                    echo "Building backbone-cis..."
+
+                    groovyDeploy.build()
+                }
+            }
+        }
+
+        /*
+        * Push above created images to Docker Hub
+        */
+        stage("push") {
+
+            when {
+                expression {
+                    BRANCH_NAME == params.DEPLOY_BRANCH && params.IS_NEW_VERSION
+                }
+            }
+
+            steps {
+
+                script {
+                    groovyDeploy.push()
+                }
+            }
+        }
+
+        /*
+        * Deploy the newly created image from Docker Hub on to the server(s)
+        */
+        stage("deploy") {
+
+            when {
+                expression {
+                    BRANCH_NAME == params.DEPLOY_BRANCH && env.APP_VERSION != "" && env.APP_VERSION != null
+                }
+            }
+            
+            steps {
+                echo "Deploying to ${params.ENVIRONMENT_NAME}..."
+
+                script {
+
+                    groovyDeploy.deployAllServices(params.ENVIRONMENT_NAME, params.NODE_SEQUENCE_ID, env.APP_VERSION, "Successfully deployed server")
+
+                }
+            }
+        }
+    }
+}

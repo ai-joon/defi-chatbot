@@ -1,0 +1,23 @@
+parameters:
+  symbol:
+    type: str
+    description: "Symbol names are always uppercase, with the coin separated by a forward slash and the market: COIN/MARKET. For example: BTC/USDT Bitcoin to Tether, or LTC/BTC Litecoin to Bitcoin"
+    required: false
+  poolAddress:
+    type: str
+    description: "The pool address for the liquidity pool on a decentralized exchange (DEX). This address is used to identify and interact with the specific pool."
+    required: false
+  network:
+    type: Literal['eth', 'bsc', 'sol']
+    required: true
+    description: "The blockchain network on which the asset or liquidity pool operates. Options include 'eth' for Ethereum, 'bsc' for Binance Smart Chain, and 'sol' for Solana."
+  exchange:
+    type: Literal['uniswap', 'sushiswap', 'pancakeswap']
+    required: false
+    description: "The exchange you want to calculate the indicator from."
+    default: "uniswap"
+  interval:
+    name: Interval
+    type: Literal['5m', '15m', '1h', '4h', '1d', '1w']
+    required: true
+    description: "The interval or time frame over which the indicator is calculated. It defines the granularity of the data points being analyzed."

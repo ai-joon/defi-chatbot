@@ -1,0 +1,14 @@
+_type: prompt
+input_variables:
+    ["text"]
+template: 
+    "The following are summaries of social media posts/ news articles of specific authors. Create a detailed summary of all of them and include the name of each other and what they are saying:\n\n
+
+    FOLLOW THIS STRUCTURE:\n
+    Author: <name of author>\n
+    Topics: <topics the author covered in the posts and opinions they have>\n\n
+
+    CONTENT:\n
+    {text}\n\n
+    
+    DETAILED SUMMARY:"

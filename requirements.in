@@ -1,0 +1,14 @@
+pytest
+python-dotenv
+rich
+langchain==0.2.3
+langchain-community==0.2.4
+langchain-core==0.2.5
+langchain-openai==0.1.8
+sse-starlette==2.1.0
+openai==1.33.0
+elasticsearch
+tiktoken
+requests
+fastapi
+uvicorn

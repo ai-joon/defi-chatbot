@@ -1,0 +1,46 @@
+indicator:
+  provider: taapi
+  key: min
+  shortName: MIN
+  longName: Lowest value over a specified period
+  description: ''
+  parameters:
+    timePeriod:
+      type: int
+      required: false
+      default: 30
+      description: ''
+    backtrack:
+      type: int
+      required: false
+      default: 0
+      description: >-
+        The number of periods to backtrack for the MACD calculation. If 0
+        (default), the MACD is calculated for the unfinished real-time candle.
+        If 1 or more, the MACD is calculated for the previous closed candle.
+    chart:
+      type: Literal['candles', 'heikinashi']
+      required: false
+      default: candles
+      description: The type of chart to use for the calculation. Default is 'candles'.
+    results:
+      type: int
+      required: false
+      default: 1
+      description: The number of calculations to return. Default is 1.
+    gaps:
+      type: bool
+      required: false
+      default: false
+      description: >-
+        For assets with low liquidity, it often happens that there are gaps in
+        the data. If true (default), missing results will be left out. If false,
+        missing results will be filled with with ohcl values for the previous
+        candle.
+  responseValues:
+    value:
+      type: float
+      description: ''
+    timestamp:
+      type: int
+      description: The timestamp of the candle for which the indicator was calculated.
