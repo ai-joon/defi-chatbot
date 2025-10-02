@@ -1,3 +1,6 @@
+Defi Chatbot
+
+
 To setup the repo, you need to create a virtual environment and install the required packages. Here are the steps:
 ```shell
 pip3 install virtualenv
