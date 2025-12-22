@@ -102,7 +102,7 @@ langsmith==0.1.147
     #   langchain-core
 markdown-it-py==3.0.0
     # via rich
-marshmallow==3.22.0
+marshmallow==3.26.2
     # via dataclasses-json
 mdurl==0.1.2
     # via markdown-it-py
